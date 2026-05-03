@@ -801,12 +801,12 @@ Error_Handler();
  8000848:	f44f 4180 	mov.w	r1, #16384	@ 0x4000
  800084c:	4815      	ldr	r0, [pc, #84]	@ (80008a4 <main+0x12c>)
  800084e:	f000 fded 	bl	800142c <HAL_GPIO_WritePin>
-		if (iterator == sizeof(data_rx) || uart_rx == '1'){
+		if (iterator == sizeof(data_rx) || uart_rx == 13){
  8000852:	7cfb      	ldrb	r3, [r7, #19]
  8000854:	2b08      	cmp	r3, #8
  8000856:	d002      	beq.n	800085e <main+0xe6>
  8000858:	7c7b      	ldrb	r3, [r7, #17]
- 800085a:	2b31      	cmp	r3, #49	@ 0x31
+ 800085a:	2b0d      	cmp	r3, #13
  800085c:	d1db      	bne.n	8000816 <main+0x9e>
 			HAL_UART_Transmit(&huart3, data_rx, iterator, 1000);
  800085e:	7cfb      	ldrb	r3, [r7, #19]

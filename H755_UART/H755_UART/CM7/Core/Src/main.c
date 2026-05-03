@@ -159,7 +159,7 @@ Error_Handler();
 		iterator++;
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14,GPIO_PIN_RESET);
-		if (iterator == sizeof(data_rx) || uart_rx == '1'){
+		if (iterator == sizeof(data_rx) || uart_rx == 13){
 			HAL_UART_Transmit(&huart3, data_rx, iterator, 1000);
 			memset(&data_rx,0,sizeof(data_rx));
 			iterator = 0;
