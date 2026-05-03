@@ -48,7 +48,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define TERMINATION_CHAR 13 //ASCII equivalent for 13 is '/r', or enter
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -159,8 +159,14 @@ Error_Handler();
 		iterator++;
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14,GPIO_PIN_RESET);
-		if (iterator == sizeof(data_rx) || uart_rx == 13){
-			HAL_UART_Transmit(&huart3, data_rx, iterator, 1000);
+		if (iterator == sizeof(data_rx) || uart_rx == TERMINATION_CHAR){
+
+			// This is done to NOT SEND the termination flag char into the return buffer
+			uint8_t size_to_send = (uart_rx == TERMINATION_CHAR) ? (iterator - 1) : iterator;
+
+			if(size_to_send>0){
+				HAL_UART_Transmit(&huart3, data_rx, size_to_send, 1000);
+			}
 			memset(&data_rx,0,sizeof(data_rx));
 			iterator = 0;
 		}

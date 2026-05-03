@@ -60,3 +60,6 @@
 - iIs possible to see the HAL function definitions in their compiled libraries, very useful for GPIO and peripheral operations
 - Reset arrays with memset(array, 0, sizeof(array))
 - It seems like arrays are treated like pointers by default when referencing their name
+- UART is not exempt from sending trash if no countermeasures to clean its buffer are taken. Even if the consolo is not showing any strange behaviors, it could be the case that many CPU cycles are being wasted
+- Directives are embedded directly into instructions, so they require no RAM usage. Meanwhile, static global variables are intended to be shared among many files, so they use SRAM
+- For constants or pin mappings, it is better to use directives instead of traditional global variables
