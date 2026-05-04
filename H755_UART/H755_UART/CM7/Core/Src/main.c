@@ -48,7 +48,14 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define TERMINATION_CHAR 13 //ASCII equivalent for 13 is '/r', or enter
+#define CARRIAGE_RETURN 13 //ASCII equivalent for 13 is '/r', or enter
+#define LINE_FEED  10 // ASCII equivalent for 10 is '/n, or line feedback
+#define LED_ON  "led on"
+#define LED_OFF  "led off"
+#define LED_RED  1
+#define LED_GREEN  2
+#define LED_ON_MESSAGE "LED TURNED ON"
+#define LED_OFF_MESSAGE "LED TURNED OFF"
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -144,9 +151,9 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
   //uint8_t data_tx = 'a';
   uint8_t uart_rx;
-  uint8_t data_rx[8];
+  uint8_t data_rx[50];
   uint8_t iterator = 0;
-  uint8_t data_rx_index = 0;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -155,24 +162,42 @@ Error_Handler();
   {
 
 	if(HAL_UART_Receive(&huart3, &uart_rx,1,1000) == HAL_OK){
-		data_rx[iterator] = uart_rx;
-		iterator++;
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14,GPIO_PIN_RESET);
-		if (iterator == sizeof(data_rx) || uart_rx == TERMINATION_CHAR){
 
-			// This is done to NOT SEND the termination flag char into the return buffer
-			uint8_t size_to_send = (uart_rx == TERMINATION_CHAR) ? (iterator - 1) : iterator;
+		// check the received data is not a CR or LF. In case it is, it should be ignored and not put in the array
+		if(uart_rx != CARRIAGE_RETURN && uart_rx != LINE_FEED){
+			data_rx[iterator] = uart_rx;
+			iterator++;
+		}
 
-			if(size_to_send>0){
-				HAL_UART_Transmit(&huart3, data_rx, size_to_send, 1000);
+		if (iterator == sizeof(data_rx) || uart_rx == CARRIAGE_RETURN || uart_rx == LINE_FEED){
+
+			// add termination char to convert bytes to string
+			data_rx[iterator] = 0;
+
+			if(iterator>0){
+
+				// check if the received string is the same as led on
+				if(strcmp((const char *)data_rx, LED_ON) == 0){
+					HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+					HAL_UART_Transmit(&huart3, (const uint8_t *)LED_ON_MESSAGE, sizeof(LED_ON_MESSAGE),1000);
+				}
+				else if(strcmp((const char *)data_rx, LED_OFF) == 0){
+					HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+					HAL_UART_Transmit(&huart3, (const uint8_t *)LED_OFF_MESSAGE, sizeof(LED_OFF_MESSAGE),1000);
+				}
+				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14,GPIO_PIN_RESET);
+
 			}
-			memset(&data_rx,0,sizeof(data_rx));
+
+
+
+			// if iterator is 0 we don't want to send just a "enter" char
+			memset(data_rx,0,sizeof(data_rx));
 			iterator = 0;
 		}
 	}
 	else{
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0,GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0,GPIO_PIN_RESET);
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
 
 	}
@@ -181,6 +206,7 @@ Error_Handler();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   /* USER CODE END 3 */
 
 

@@ -97,3 +97,7 @@
 	}
 }
 ```
+
+- Even though chars can be represented as uint8_t, it is worth noting that for the compiler it is not the same to compare char vars to uint8_t vars because of the sign, aka, chars can go from -127 to 127, and uint8_t is from 0 to 256. To overcome this, we can use a cast operation in C
+- It is possible to use the strcmp operator with char arrays (strings) as long as they are properly casted into the compatible variable type
+- Always check the ASCII equivalence for chars and their values; it might be confusing when dealing with /r and /n for endline in UART reception mode
