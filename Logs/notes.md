@@ -63,3 +63,37 @@
 - UART is not exempt from sending trash if no countermeasures to clean its buffer are taken. Even if the consolo is not showing any strange behaviors, it could be the case that many CPU cycles are being wasted
 - Directives are embedded directly into instructions, so they require no RAM usage. Meanwhile, static global variables are intended to be shared among many files, so they use SRAM
 - For constants or pin mappings, it is better to use directives instead of traditional global variables
+
+### Day 2 (04/05/2026):
+
+- memset for resetting arrays makes no sense actually, wouldn't it be better to use circular buffers instead to update the array contents without wasting CPU cycles?
+- A basic snippet that allows enter to be the termination char 
+
+```
+  while (1)
+  {
+
+	if(HAL_UART_Receive(&huart3, &uart_rx,1,1000) == HAL_OK){
+		data_rx[iterator] = uart_rx;
+		iterator++;
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14,GPIO_PIN_RESET);
+		if (iterator == sizeof(data_rx) || uart_rx == TERMINATION_CHAR){
+
+			// This is done to NOT SEND the termination flag char into the return buffer
+			uint8_t size_to_send = (uart_rx == TERMINATION_CHAR) ? (iterator - 1) : iterator;
+
+			if(size_to_send>0){
+				HAL_UART_Transmit(&huart3, data_rx, size_to_send, 1000);
+			}
+			memset(&data_rx,0,sizeof(data_rx));
+			iterator = 0;
+		}
+	}
+	else{
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0,GPIO_PIN_RESET);
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+
+	}
+}
+```
