@@ -48,7 +48,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define BTN_PRESSED (1<<0) // 0000 0001
+#define BTN_NOT_PRESSED (0<<0) // 0000 0000
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -141,6 +142,7 @@ Error_Handler();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART3_UART_Init();
+  uint8_t curr_state = 0x00;
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -149,8 +151,23 @@ Error_Handler();
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  //Check the current pin state
 	  if(HAL_GPIO_ReadPin(USR_BTN_GPIO_Port,USR_BTN_Pin) == GPIO_PIN_SET){
-		  HAL_GPIO_TogglePin(YELLOW_LED_GPIO_Port,YELLOW_LED_Pin);
+		  HAL_GPIO_WritePin(YELLOW_LED_GPIO_Port,YELLOW_LED_Pin,GPIO_PIN_SET);
+		  // Evaluate with or the bits from curr state and LED_ON with bit manipulation through OR
+		  curr_state = curr_state | BTN_PRESSED;
+	  }
+	  else if(HAL_GPIO_ReadPin(USR_BTN_GPIO_Port,USR_BTN_Pin) == GPIO_PIN_RESET){
+		  HAL_GPIO_WritePin(YELLOW_LED_GPIO_Port,YELLOW_LED_Pin,GPIO_PIN_RESET);
+		  // In case the button is not pressed we need to evaluate with AND the bits from the state mask, so they go to 0
+		  curr_state = curr_state & BTN_NOT_PRESSED;
+	  }
+
+	  if(curr_state == BTN_NOT_PRESSED){
+		  HAL_GPIO_WritePin(GPIOB,RED_LED_Pin,GPIO_PIN_RESET);
+	  }
+	  else{
+		  HAL_GPIO_WritePin(GPIOB,RED_LED_Pin,GPIO_PIN_SET);
 	  }
     /* USER CODE END WHILE */
 

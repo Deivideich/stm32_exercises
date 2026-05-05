@@ -7,3 +7,4 @@
   - From integrated USR button it is known that it has an integrated external resistor to process the signal
   - Implement a external button to check if the behavior is similar
   - Do debouncing with hardware/signal filtering and software methods
+  - Consider bit manipulation to handle states in an efficient way
