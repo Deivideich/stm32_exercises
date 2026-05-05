@@ -54,8 +54,9 @@
 #define LED_OFF  "led off"
 #define LED_RED  1
 #define LED_GREEN  2
-#define LED_ON_MESSAGE "LED TURNED ON"
-#define LED_OFF_MESSAGE "LED TURNED OFF"
+#define LED_ON_MESSAGE "LED TURNED ON\r\n"
+#define LED_OFF_MESSAGE "LED TURNED OFF\r\n"
+#define ERROR_MESSAGE "Unknown command\r\n"
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -169,7 +170,10 @@ Error_Handler();
 			iterator++;
 		}
 
-		if (iterator == sizeof(data_rx) || uart_rx == CARRIAGE_RETURN || uart_rx == LINE_FEED){
+		/* if the iterator value is already the max value of data_rx, then send the message.
+		 in order to do this it is also necessary to consider the byte reserved for /0, which is the
+		 string termination line */
+		if (iterator == (sizeof(data_rx)-1) || uart_rx == CARRIAGE_RETURN || uart_rx == LINE_FEED){
 
 			// add termination char to convert bytes to string
 			data_rx[iterator] = 0;
@@ -184,6 +188,9 @@ Error_Handler();
 				else if(strcmp((const char *)data_rx, LED_OFF) == 0){
 					HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 					HAL_UART_Transmit(&huart3, (const uint8_t *)LED_OFF_MESSAGE, sizeof(LED_OFF_MESSAGE),1000);
+				}
+				else{
+					HAL_UART_Transmit(&huart3, (const uint8_t *)ERROR_MESSAGE, sizeof(ERROR_MESSAGE),1000);
 				}
 				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14,GPIO_PIN_RESET);
 
