@@ -107,3 +107,4 @@
 - Adding the \r\n at the end of the strings make the carriage return and string end attach to the string buffers as expected
 - Use size_t to ensure maximum capacitr iterators are being used for their type
 - It is fundamental to put the string termination (ASCII 0) to identify the end of a string and use the string functions like strcmp
+- Even the integrated push buttons in the board are susceptible to noise due to the main processor speed while reading the button press
