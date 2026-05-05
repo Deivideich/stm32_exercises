@@ -188,11 +188,8 @@ Error_Handler();
 				  HAL_GPIO_WritePin(GPIOB,RED_LED_Pin,GPIO_PIN_SET);
 				  send_uart(BTN_PRESSED_MSG);
 			  }
+			  accept_input &= 0x00;
 		  }
-
-
-
-
 		  // Now the curr state must be compared with the previous state. If both states are the same, then no change has been made
 		  // if the current state is different from the previous one, then we toggle a led
 
@@ -207,27 +204,8 @@ Error_Handler();
   	  if(HAL_GetTick() - time_start > delay_){
   		  accept_input |= 0x01;
   	  }
-  	  else{
-  		  accept_input &= 0x00;
-  	  }
 
   	  update_start_time &= 0x00;
-
-	  // Now the curr state must be compared with the previous state. If both states are the same, then no change has been made
-	  // if the current state is different from the previous one, then we toggle a led
-
-	  // past_state = curr_state;
-
-	  /*
-	  if(curr_state == BTN_NOT_PRESSED){
-		  HAL_GPIO_WritePin(GPIOB,RED_LED_Pin,GPIO_PIN_RESET);
-		  send_uart(BTN_NOT_PRESSED_MSG);
-	  }
-	  else{
-		  HAL_GPIO_WritePin(GPIOB,RED_LED_Pin,GPIO_PIN_SET);
-		  send_uart(BTN_PRESSED_MSG);
-	  }
-	  */
 
     /* USER CODE END WHILE */
 
