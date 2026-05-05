@@ -52,6 +52,7 @@
 #define BTN_NOT_PRESSED (0<<0) // 0000 0000
 #define BTN_PRESSED_MSG "BUTTON PRESSED"
 #define BTN_NOT_PRESSED_MSG "BUTTON NOT PRESSED"
+#define STATE_CHANGED_MSG "STATE CHANGED"
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -145,6 +146,7 @@ Error_Handler();
   MX_GPIO_Init();
   MX_USART3_UART_Init();
   uint8_t curr_state = 0x00;
+  uint8_t past_state = 0x00;
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -165,6 +167,18 @@ Error_Handler();
 		  curr_state = curr_state & BTN_NOT_PRESSED;
 	  }
 
+	  // Add a small delay to avoid bouncing switch through software
+	  HAL_Delay(50);
+
+	  // Now the curr state must be compared with the previous state. If both states are the same, then no change has been made
+	  // if the current state is different from the previous one, then we toggle a led
+	  if(curr_state != past_state){
+		  HAL_GPIO_TogglePin(GPIOB,RED_LED_Pin);
+		  send_uart(STATE_CHANGED_MSG);
+	  }
+	  past_state = curr_state;
+
+	  /*
 	  if(curr_state == BTN_NOT_PRESSED){
 		  HAL_GPIO_WritePin(GPIOB,RED_LED_Pin,GPIO_PIN_RESET);
 		  send_uart(BTN_NOT_PRESSED_MSG);
@@ -173,6 +187,8 @@ Error_Handler();
 		  HAL_GPIO_WritePin(GPIOB,RED_LED_Pin,GPIO_PIN_SET);
 		  send_uart(BTN_PRESSED_MSG);
 	  }
+	  */
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
