@@ -132,3 +132,8 @@
 
   	  update_start_time &= 0x00;
   ```
+
+### Day 4 (09/05/2026):
+
+- It is better to separate functions into independent header files to not fill the main.c with too many responsibilities
+- For HAL related functions it is possible to include "main.h"

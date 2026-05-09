@@ -21,7 +21,8 @@
 #include <string.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "button.h"
+#include "uart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,11 +49,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define BTN_PRESSED (1<<0) // 0000 0001
-#define UPDATE_STATE (1<<1) // 0000 0010
-#define BTN_PRESSED_MSG "BUTTON PRESSED"
-#define BTN_NOT_PRESSED_MSG "BUTTON NOT PRESSED"
-#define STATE_CHANGED_MSG "STATE CHANGED"
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -69,7 +66,7 @@ static void MPU_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
-void send_uart();
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -146,13 +143,7 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
 	MX_GPIO_Init();
 	MX_USART3_UART_Init();
-	uint8_t curr_state = 0x00;
-	uint8_t past_state = 0x00;
-	uint8_t start_timer = 0x01;
-	uint32_t time_start = 0;
-	uint32_t wait_time = 10; //1ms
-	uint8_t usr_input = 0;
-	uint8_t update_state = 0x01;
+
 
   /* USER CODE END 2 */
 
@@ -160,48 +151,17 @@ Error_Handler();
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  //Check the current pin state
-	 usr_input = HAL_GPIO_ReadPin(USR_BTN_GPIO_Port, USR_BTN_Pin);
+	  button_update();
 
-	 // Use the current pin state
-	 if(usr_input == GPIO_PIN_SET){
-		 curr_state |= BTN_PRESSED;
-	 }
-	 else{
-		 curr_state &= ~BTN_PRESSED;
-	 }
+	  button_event_t event = button_get_event();
 
-	 //Start timer
-	 if(start_timer == 0x01){
-		 // Make time_start the curr time + a wait time
-		 time_start = HAL_GetTick();
-		 start_timer = 0x00;
-	 }
-
-	 //Check if the button state changed
-	 if(past_state != curr_state){
-		 //Evaluate that enough time in the current state has happened
-		 if((HAL_GetTick() - time_start) >= wait_time){
-			 update_state = 0x01;
-			 start_timer = 0x01;
-		 }
-		 if(update_state){
-			 if (curr_state == BTN_PRESSED){
-				 send_uart(BTN_PRESSED_MSG);
-			 }
-			 else {
-				 send_uart(BTN_NOT_PRESSED_MSG);
-			 }
-			 // wait until the timer for the states completes its cycle
-			 update_state = 0x00;
-		 }
-	 }
-
-	 past_state = curr_state;
-
-
-
-
+	  if(event == BTN_EVENT_PRESSED)
+	  {
+	      send_uart("BUTTON PRESSED");
+	  }
+	  else if (event == BTN_EVENT_RELEASED){
+		  send_uart("BUTTON RELEASED");
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -357,10 +317,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void send_uart(char *msg){
-	HAL_UART_Transmit(&huart3,(const uint8_t *) msg, strlen(msg),1000);
-	HAL_UART_Transmit(&huart3,(const uint8_t *) "\r\n", strlen("\r\n"),1000);
-}
+
 /* USER CODE END 4 */
 
  /* MPU Configuration */
