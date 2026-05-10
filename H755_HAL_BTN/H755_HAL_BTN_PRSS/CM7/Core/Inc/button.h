@@ -18,8 +18,6 @@ typedef enum
     BTN_EVENT_NONE = 0U,
     BTN_EVENT_PRESSED,
     BTN_EVENT_RELEASED,
-	BTN_EVENT_BOUNCE_CHECK,
-	BTN_EVENT_REPEATED
 } button_event_t;
 
 void button_init(void);
