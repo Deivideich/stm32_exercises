@@ -8,3 +8,11 @@
   - Implement a external button to check if the behavior is similar
   - Do debouncing with hardware/signal filtering and software methods
   - Consider bit manipulation to handle states in an efficient way
+
+  ## Things I learned:
+
+  - Modularization through header files to separate concerns
+  - Use of polling for simple event detection
+  - Non blocking polling for event and state identification
+  - Use of HAL for GPIO initialization and tick retrieval
+  
