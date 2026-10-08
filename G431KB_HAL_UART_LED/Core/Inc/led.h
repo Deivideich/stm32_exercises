@@ -7,9 +7,9 @@
 
 #ifndef INC_LED_H_
 #define INC_LED_H_
-
 #include <stdint.h>
 #include <stdbool.h>
+#include "stm32g4xx_hal.h"
 
 extern const char * const LED_OFF_MSG;
 extern const char * const LED_ON_MSG;
@@ -24,10 +24,13 @@ typedef struct led_config_s{
 	led_states_t 	state;
 	const char 		*msg;
 	uint16_t 		gpio_pin;
-	void 			*gpio_port;
+	GPIO_TypeDef	*gpio_port;
 } led_config_t;
 
-void led_init(led_config_t *led, uint16_t pin, void *port);
+void led_init(led_config_t *led, uint16_t pin, GPIO_TypeDef *port);
 void led_toggle(led_config_t *led);
+void led_turn_on(led_config_t *led);
+void led_turn_off(led_config_t *led);
+void led_blink(led_config_t *led);
 
 #endif /* INC_LED_H_ */

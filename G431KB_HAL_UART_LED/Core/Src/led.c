@@ -13,12 +13,12 @@
 const char * const LED_OFF_MSG = "LED_OFF";
 const char * const LED_ON_MSG  = "LED_ON";
 
-void led_init(led_config_t *led, uint16_t pin, void *port){
+void led_init(led_config_t *led, uint16_t pin, GPIO_TypeDef *port){
 	led->gpio_pin = pin;
 	led->gpio_port = port;
 	led->msg = LED_OFF_MSG;
 	led->state = LED_STATE_OFF;
-	HAL_GPIO_WritePin((GPIO_TypeDef*)port, pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET);
 };
 
 void led_toggle(led_config_t *led){
@@ -26,12 +26,24 @@ void led_toggle(led_config_t *led){
 		if(led->state == LED_STATE_ON){
 			led->state = LED_STATE_OFF;
 			led->msg = LED_OFF_MSG;
-			HAL_GPIO_WritePin((GPIO_TypeDef*)led->gpio_port, led->gpio_pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(led->gpio_port, led->gpio_pin, GPIO_PIN_RESET);
 		}
 		else{
 			led->state = LED_STATE_ON;
 			led->msg = LED_ON_MSG;
-			HAL_GPIO_WritePin((GPIO_TypeDef*)led->gpio_port, led->gpio_pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(led->gpio_port, led->gpio_pin, GPIO_PIN_SET);
 		}
 	}
+}
+
+void led_turn_on(led_config_t *led){
+	HAL_GPIO_WritePin(led->gpio_port, led->gpio_pin, GPIO_PIN_SET);
+	led->msg = LED_ON_MSG;
+	led->state = LED_STATE_ON;
+}
+
+void led_turn_off(led_config_t *led){
+	HAL_GPIO_WritePin((GPIO_TypeDef*) led->gpio_port, led->gpio_pin, GPIO_PIN_RESET);
+	led->msg = LED_OFF_MSG;
+	led->state = GPIO_PIN_RESET;
 }
