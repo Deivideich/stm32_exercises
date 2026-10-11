@@ -11,6 +11,9 @@
 #include <stdbool.h>
 #include "stm32g4xx_hal.h"
 
+extern const char * const LED_ON_MSG;
+extern const char * const LED_OFF_MSG;
+
 typedef enum led_states_e {
     LED_STATE_OFF,
     LED_STATE_ON,

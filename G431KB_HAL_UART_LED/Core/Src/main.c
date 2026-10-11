@@ -18,10 +18,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "led.h"
+#include "ecu.h"
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,7 +44,12 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+led_config_t user_led;
+ecu_config_t my_ecu;
+uart_config_t my_uart;
+uint16_t pin = 8;
+uint16_t uart_data_size = 32;
+uint8_t uart_rx_data[32];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,7 +96,9 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  led_init(&user_led, GPIO_PIN_8, GPIOB);
+  ecu_init(&my_ecu);
+  uart_init(&huart2, &my_uart);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -98,7 +106,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  if(HAL_UART_Receive(&huart2, uart_rx_data,uart_data_size, HAL_MAX_DELAY) == HAL_OK){
+		  led_toggle(&user_led);
+		  ecu_report_status(&my_ecu, &my_uart);
+	  }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
