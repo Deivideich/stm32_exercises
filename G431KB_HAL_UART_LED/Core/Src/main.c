@@ -48,8 +48,8 @@ led_config_t user_led;
 ecu_config_t my_ecu;
 uart_config_t my_uart;
 uint16_t pin = 8;
-uint16_t uart_data_size = 32;
-uint8_t uart_rx_data[32];
+uint16_t uart_data_size = 1;
+uint8_t uart_rx_data[1];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -97,7 +97,7 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   led_init(&user_led, GPIO_PIN_8, GPIOB);
-  ecu_init(&my_ecu);
+  //ecu_init(&my_ecu);
   uart_init(&huart2, &my_uart);
   /* USER CODE END 2 */
 
@@ -107,8 +107,11 @@ int main(void)
   {
     /* USER CODE END WHILE */
 	  if(HAL_UART_Receive(&huart2, uart_rx_data,uart_data_size, HAL_MAX_DELAY) == HAL_OK){
-		  led_toggle(&user_led);
-		  ecu_report_status(&my_ecu, &my_uart);
+		  if(uart_rx_data[0]=='a'){
+			  led_toggle(&user_led);
+		  }
+		  HAL_UART_Transmit(&huart2, uart_rx_data,1, HAL_MAX_DELAY);
+		  //ecu_report_status(&my_ecu, &my_uart);
 	  }
     /* USER CODE BEGIN 3 */
   }

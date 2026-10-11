@@ -19,12 +19,13 @@ typedef enum ecu_status_e{
 } ecu_status_t;
 
 typedef struct ecu_config_s{
-	ecu_status_t ecu_status;
+	ecu_status_t 		ecu_status;
+	uart_config_t	 	*uart_handler;
 
 } ecu_config_t;
 
-void ecu_init(ecu_config_t *ecu);
+void ecu_init(ecu_config_t *ecu, uart_config_t *uart);
 void ecu_enable(ecu_config_t *ecu);
 void ecu_disable(ecu_config_t *ecu);
-void ecu_report_status(ecu_config_t *ecu, uart_config_t *uart);
+void ecu_report_status(ecu_config_t *ecu);
 #endif /* INC_ECU_H_ */
