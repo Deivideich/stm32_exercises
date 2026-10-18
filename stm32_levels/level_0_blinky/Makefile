@@ -1,5 +1,5 @@
 # Name of the final binary file
-PROJECT = blinky
+PROJECT = level_0_blinky
 
 # Relative path to the G431KB shared files
 SHARED_DIR = ../shared/g431kb
