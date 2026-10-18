@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Lvl 0: Blinky",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/stm32_levels/level_0_blinky/build/level_0_blinky.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "gdbPath": "/usr/bin/gdb-multiarch",
+            "preLaunchTask": "Build Current Level",
+            "configFiles": [
+                "${workspaceFolder}/stm32_levels/shared/g431kb/openocd.cfg"
+            ],
+            "toolchainPrefix": "arm-none-eabi",
+            "armToolchainPath": "/usr/bin"
+        },
+        {
+            "name": "Debug Lvl 1: Bitwise Memory",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/stm32_levels/level_1_bitwise_memory/build/level_1_bitwise_memory.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "gdbPath": "/usr/bin/gdb-multiarch",
+            "preLaunchTask": "Build Current Level",
+            "configFiles": [
+                "${workspaceFolder}/stm32_levels/shared/g431kb/openocd.cfg"
+            ],
+            "toolchainPrefix": "arm-none-eabi",
+            "armToolchainPath": "/usr/bin"
+        }
+    ]
+}
+
+
