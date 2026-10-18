@@ -13,6 +13,8 @@
 
 #include "stm32g4xx_hal.h"
 
+
+
 typedef enum uart_status_e{
 	UART_OK = 0,
 	UART_ERROR,
@@ -29,5 +31,6 @@ typedef struct uart_config_s{
 void uart_init(UART_HandleTypeDef *uart_handle, uart_config_t *uart_config);
 void uart_rx(uart_config_t *uart_config);
 void uart_tx(uart_config_t *uart_config);
+void uart_receive_and_process(uart_config_t *uart_config);
 
 #endif /* INC_UART_H_ */
