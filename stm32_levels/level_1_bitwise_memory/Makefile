@@ -36,3 +36,26 @@ flash: build/$(PROJECT).elf
 # Clean locally generated files
 clean:
 	rm -rf build
+
+# Debug through remote call to gdb multi archo functions defined in common .gdbinit
+debug: build/$(PROJECT).elf
+	@echo "Verifying OpenOCD server..."
+	@if ! pgrep -x "openocd" > /dev/null; then \
+		echo "OpenOCD is not running. Initialiazing process..."; \
+		openocd -f $(SHARED_DIR)/openocd.cfg > /dev/null 2>&1 & \
+		sleep 1; \
+	else \
+		echo "OpenOCD is active."; \
+	fi
+	@echo "file build/$(PROJECT).elf" > .gdb_target
+	@echo "source ../shared/g431kb/.gdbinit" >> .gdb_target
+	-gdb-multiarch -x .gdb_target
+	@echo "Cleaning up local targets and closing OpenOCD..."
+	@rm -f .gdb_target
+	-@killall openocd > /dev/null 2>&1
+
+# Separate instruction to kill hanging processes
+kill:	
+	@echo "Cleaning up local targets and closing OpenOCD..."
+	@rm -rf .gdb_target
+	-@killall openocd > /dev/null 2>&1

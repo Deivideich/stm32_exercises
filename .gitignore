@@ -62,3 +62,5 @@ settings.json
 **/Debug/
 
 *.bin
+
+.gdb_target
