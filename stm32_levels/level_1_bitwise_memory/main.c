@@ -6,30 +6,24 @@ void delay(volatile uint32_t count) {
     }
 }
 
-void test_bloque1(void) {
+void bitwise_operations(void) {
+    // Initialize an arbitrary 32 bit register
     volatile uint32_t register_sim = 0x00000000U;
 
-    // 001 and 003: Turn on bits 1 and 8 using OR
-    register_sim |= (1U << 1);
-    register_sim |= (1U << 8);
-    // Current value: 0x00000102
-
-    // 002 and 004: Turn off bit 1 only using AND and NOT
-    register_sim &= ~(1U << 1);
-    // Current value: 0x00000100
-
-    // 005: Toggle bit 8 using XOR
-    register_sim ^= (1U << 8);
-    // Current value: 0x00000000
-
-    register_sim ^= (1U << 8);
-    // Current value: 0x00000100
+    // Exercise 1: Manually calculate a binary and hexadecimal mask to isolate a specific bit
+    volatile uint32_t calculated_hexadecimal_mask = 0x100U; // 256 in decimal, 100000000 in binary
+    volatile uint32_t calculated_binary_mask = (1U << 1); //0x00000010 mask in binary;
+    register_sim |= calculated_binary_mask; //register_sim is now 00000010 in binary  
+    register_sim |= calculated_hexadecimal_mask; //register sim is now 1000000010, or 0x00000102
+    
+    // Exercise 2: Apply the logical AND (&) operation to clear (set to 0) a register bit without altering the others.
+    register_sim &= ~(1U << 8); //register sim is now 0x00000010 
 }
 
 
 int main(void) {
 
-    test_bloque1();
+    bitwise_operations();
 
     /* 1. Enable clock for GPIOB (Bit 1 of the AHB2ENR register) */
     RCC->AHB2ENR |= (1UL << 1); 
