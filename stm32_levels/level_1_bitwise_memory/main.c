@@ -17,7 +17,28 @@ void bitwise_operations(void) {
     register_sim |= calculated_hexadecimal_mask; //register sim is now 1000000010, or 0x00000102
     
     // Exercise 2: Apply the logical AND (&) operation to clear (set to 0) a register bit without altering the others.
-    register_sim &= ~(1U << 8); //register sim is now 0x00000010 
+    register_sim &= ~(1U << 8); //register sim is now 00000010 
+
+    // Exercise 3: Apply the logical OR (|) operation to activate (set to 1) a configuration bit.
+    register_sim |= (1U << 5); //register sim is now 01000010
+    
+    // Exercise 4: Combine the NOT (~) operator with AND (&) to safely turn off a specific bit.
+    register_sim &= ~(1U << 1);
+
+    // Exercise 5: Apply the XOR (^) operator to accurately toggle a status bit.
+    register_sim ^= (1U << 1);
+
+    // Exercise 6: Use logical left shifts (<<) to position a multi-bit value within a register field.
+    register_sim = 3U; // 0x00000011 which is 3 in binary
+    #define TIMER_MODE_SHIFT 12U // bit displacement value
+    uint32_t mode_value = 5U; // 0x05 or 00000101
+
+    register_sim |= (mode_value << TIMER_MODE_SHIFT); // 101000000000011
+    // Exercise 7: Use logical right shifts (>>) to extract and read a multi-bit field from a register
+
+
+    // Exercise 8: 
+    
 }
 
 
