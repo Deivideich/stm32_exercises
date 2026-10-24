@@ -48,7 +48,11 @@ debug: build/$(PROJECT).elf
 		echo "OpenOCD is active."; \
 	fi
 	@echo "file build/$(PROJECT).elf" > .gdb_target
-	@echo "source ../shared/g431kb/.gdbinit" >> .gdb_target
+	@echo "source $(SHARED_DIR)/.gdbinit" >> .gdb_target
+	@if [ -f .gdb_breakpoints ]; then \
+		echo "Found local breakpoints. Injecting into target..."; \
+		echo "source .gdb_breakpoints" >> .gdb_target; \
+	fi
 	-gdb-multiarch -x .gdb_target
 	@echo "Cleaning up local targets and closing OpenOCD..."
 	@rm -f .gdb_target
