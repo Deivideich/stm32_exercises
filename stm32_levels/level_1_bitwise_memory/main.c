@@ -34,11 +34,18 @@ void bitwise_operations(void) {
     uint32_t mode_value = 5U; // 0x05 or 00000101
 
     register_sim |= (mode_value << TIMER_MODE_SHIFT); // 101000000000011
-    // Exercise 7: Use logical right shifts (>>) to extract and read a multi-bit field from a register
-
-
-    // Exercise 8: 
     
+    // Exercise 7: Use logical right shifts (>>) to extract and read a multi-bit field from a register
+    uint32_t register_extract = 0;
+    uint32_t bitfield = 31U;
+    register_extract = (register_sim >> TIMER_MODE_SHIFT) & bitfield; //register extract = 00101
+    (void)register_extract;
+    // Exercise 8: Design a compound mask with shifts to clear and then write a multi-bit configuration field.
+    register_sim = 0x53F9F314; //random value 
+    uint32_t sensor_mask = 63U; //assume 6bit config field for a sensor config mask
+    uint32_t init_config_sensor = 25U; //random config sensor initialization mask
+    #define MOCK_SENSOR_BITFIELD_READ_AND_RESET_SHIFT 10U
+    register_sim = (~(sensor_mask << MOCK_SENSOR_BITFIELD_READ_AND_RESET_SHIFT) & register_sim) | (init_config_sensor << MOCK_SENSOR_BITFIELD_READ_AND_RESET_SHIFT);
 }
 
 
