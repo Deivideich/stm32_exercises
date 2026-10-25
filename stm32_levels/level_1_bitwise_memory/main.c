@@ -1,4 +1,5 @@
 #include "hardware.h"
+#include "include/packed_struct.h"
 
 void delay(volatile uint32_t count) {
     while (count--) {
@@ -52,6 +53,10 @@ void bitwise_operations(void) {
 int main(void) {
 
     bitwise_operations();
+
+    custom_struct_packed_t custom_struct_packed;
+    custom_struct_t custom_struct;
+
     uint32_t fake_random_sensor_register = 0x8304BFD3;
     uint32_t timer_shift = 8U;
     uint32_t fake_dynamic_value_mask = 15U; //0b1111
@@ -62,6 +67,14 @@ int main(void) {
     uint32_t status_flag_mask = 1U;
     uint32_t status_flag_inner_shift = timer_shift + 3U;// After moving 8U, move another 3 shifts to check for the flag mask sized bit 
     fake_random_sensor_register = ~(fake_dynamic_value_mask << timer_shift) & fake_random_sensor_register; //sets bits from random register to 000
+
+    // Exercise 10: Build a packed struct
+    uint32_t size_packed = 0;
+    uint32_t size_unpacked = 0;
+    size_packed = sizeof(custom_struct_packed);
+    size_unpacked = sizeof(custom_struct);
+    (void)size_packed;
+    (void)size_unpacked;
 
     while (1) {
 
