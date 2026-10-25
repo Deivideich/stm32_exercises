@@ -52,30 +52,26 @@ void bitwise_operations(void) {
 int main(void) {
 
     bitwise_operations();
+    uint32_t fake_random_sensor_register = 0x8304BFD3;
+    uint32_t timer_shift = 8U;
+    uint32_t fake_dynamic_value_mask = 15U; //0b1111
+    uint32_t counter = 0;
+    uint32_t limit_mask = 15U; // for some random reason, even if the val for our fake perihperal is 4-bit sized, lets assume that the counter only
+    // needs access to the first 3 bits and the last bit is only a configuration or reset bit 
+    uint32_t status_flag = 0;
+    uint32_t status_flag_mask = 1U;
+    uint32_t status_flag_inner_shift = timer_shift + 3U;// After moving 8U, move another 3 shifts to check for the flag mask sized bit 
+    fake_random_sensor_register = ~(fake_dynamic_value_mask << timer_shift) & fake_random_sensor_register; //sets bits from random register to 000
 
-    /* 1. Enable clock for GPIOB (Bit 1 of the AHB2ENR register) */
-    RCC->AHB2ENR |= (1UL << 1); 
-    
-    /* AHB2 bus synchronization by reading the newly modified register */
-    volatile uint32_t dummy;
-    dummy = RCC->AHB2ENR;
-    dummy = RCC->AHB2ENR;
-    (void)dummy;
-
-    /* 2. Configure Pin PB8 as Push-Pull Output */
-    GPIOB->MODER &= ~(3UL << (8 * 2));
-    GPIOB->MODER |=  (1UL << (8 * 2));
-    
-    GPIOB->OTYPER &= ~(1UL << 8);
-    GPIOB->OSPEEDR |= (3UL << (8 * 2));
-
-    /* 3. Blinking loop */
     while (1) {
-        GPIOB->BSRR = (1UL << 8); // Turn on LED
-        delay(1000000);
 
-        GPIOB->BSRR = (1UL << (8 + 16)); // Turn off LED
-        delay(1000000);
+        // Exercise 9: Implement a synchronous polling read by analyzing a status flag using an AND mask.
+        status_flag = (fake_random_sensor_register >> status_flag_inner_shift) & status_flag_mask;
+        counter = counter + 1;
+        counter = counter & limit_mask;
+        fake_random_sensor_register = ~(fake_dynamic_value_mask << timer_shift) & fake_random_sensor_register;
+        fake_random_sensor_register = (counter << timer_shift) | fake_random_sensor_register; 
+        (void)status_flag;
     }
 
     return 0;
