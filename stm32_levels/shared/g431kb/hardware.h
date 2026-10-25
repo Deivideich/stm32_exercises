@@ -9,13 +9,30 @@
 #define PERIPH_BASE         0x40000000UL
 #define AHB1PERIPH_BASE     (PERIPH_BASE + 0x00020000UL) /* 0x40020000 */
 #define AHB2PERIPH_BASE     (PERIPH_BASE + 0x08000000UL) /* 0x48000000 */
-
+#define APB1_BASE           (PERIH_BASE  + 0x00000000UL) /* 0X40000000 */
+#define USART2_BASE         (PERIPH_BASE + 0x00004400UL) /* 0x40004400 */
 #define RCC_BASE            (AHB1PERIPH_BASE + 0x1000UL)  /* 0x40021000 */
 #define GPIOB_BASE          (AHB2PERIPH_BASE + 0x0400UL)  /* 0x48000400 */
 
 /* ========================================================================== */
 /* 2. REGISTER MAP STRUCTURES                                                 */
 /* ========================================================================== */
+
+/* Structure for APB1 map*/
+typedef struct{
+   volatile uint32_t CR1;          /* 0x00 */
+   volatile uint32_t CR2;          /* 0x04 */
+   volatile uint32_t CR3;          /* 0x08 */
+   volatile uint32_t BRR;          /* 0x0C */
+   volatile uint32_t GTPR;         /* 0x10 */
+   volatile uint32_t RTOR;         /* 0x14 */
+   volatile uint32_t RQR;          /* 0x18 */
+   volatile uint32_t ISR;          /* 0x1C */
+   volatile uint32_t ICR;          /* 0x20 */
+   volatile uint32_t RDR;          /* 0x24 */
+   volatile uint32_t TDR;          /* 0x28 */
+   volatile uint32_t PRESC;        /* 0x2C */
+} USART_TypeDef;
 
 /* Clean structure for the Reset and Clock Control (RCC) block */
 typedef struct {
@@ -61,5 +78,6 @@ typedef struct {
 /* ========================================================================== */
 #define RCC     ((RCC_TypeDef *)RCC_BASE)
 #define GPIOB   ((GPIO_TypeDef *)GPIOB_BASE)
+#define USART2   ((USART_TypeDef *)USART2_BASE)
 
 #endif /* HARDWARE_H */

@@ -76,6 +76,8 @@ int main(void) {
     (void)size_packed;
     (void)size_unpacked;
 
+    // Exercise 11: Define absolute physical addresses of base registers using C macros and pointers
+
     while (1) {
 
         // Exercise 9: Implement a synchronous polling read by analyzing a status flag using an AND mask.
