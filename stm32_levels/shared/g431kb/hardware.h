@@ -14,6 +14,21 @@
 #define RCC_BASE            (AHB1PERIPH_BASE + 0x1000UL)  /* 0x40021000 */
 #define GPIOB_BASE          (AHB2PERIPH_BASE + 0x0400UL)  /* 0x48000400 */
 
+/*Exercise 13: Create a custom full register map using 'struct' and volatile pointers for a simulated
+hardware block*/
+// Lets simulate a simple stopwatch module
+#define FLASH_BASE          0x00000000UL
+#define SRAM1_BASE          0x20000000UL
+#define CUSTOM_SIMULATED_STOPWATCH_MODULE_BASE     (SRAM1_BASE + 0x00004000UL) //Assign a random address /* 0x00004000 */
+
+
+typedef struct{
+    volatile uint32_t SECONDS;              /* 0x00 */ //Lets use 32 bits to represent SECONDS, MINUTES AND HOURS INDIVIDUALLY  
+    volatile uint32_t MINUTES;              /* 0x04 */
+    volatile uint32_t HOURS;                /* 0x08 */
+    volatile uint32_t CR;                   /* 0x0C */ //Control register to reset, start or halt stopwatch
+} CUSTOM_SIMULATED_STOPWATCH_MODULE_TypeDef;
+
 /* ========================================================================== */
 /* 2. REGISTER MAP STRUCTURES                                                 */
 /* ========================================================================== */
@@ -84,8 +99,8 @@ typedef struct {
 /* ========================================================================== */
 /* 3. MAGIC POINTER INSTANTIATION                                             */
 /* ========================================================================== */
-#define RCC     ((RCC_TypeDef *)RCC_BASE)
-#define GPIOB   ((GPIO_TypeDef *)GPIOB_BASE)
-#define USART2   ((USART_TypeDef *)USART2_BASE)
-
+#define RCC         ((RCC_TypeDef *)RCC_BASE)
+#define GPIOB       ((GPIO_TypeDef *)GPIOB_BASE)
+#define USART2      ((USART_TypeDef *)USART2_BASE)
+#define STOPWATCH1  ((CUSTOM_SIMULATED_STOPWATCH_MODULE_TypeDef *)CUSTOM_SIMULATED_STOPWATCH_MODULE_BASE)
 #endif /* HARDWARE_H */
