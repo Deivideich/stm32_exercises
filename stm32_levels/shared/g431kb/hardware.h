@@ -9,7 +9,7 @@
 #define PERIPH_BASE         0x40000000UL
 #define AHB1PERIPH_BASE     (PERIPH_BASE + 0x00020000UL) /* 0x40020000 */
 #define AHB2PERIPH_BASE     (PERIPH_BASE + 0x08000000UL) /* 0x48000000 */
-#define APB1_BASE           (PERIH_BASE  + 0x00000000UL) /* 0X40000000 */
+#define APB1_BASE           (PERIPH_BASE  + 0x00000000UL) /* 0X40000000 */
 #define USART2_BASE         (PERIPH_BASE + 0x00004400UL) /* 0x40004400 */
 #define RCC_BASE            (AHB1PERIPH_BASE + 0x1000UL)  /* 0x40021000 */
 #define GPIOB_BASE          (AHB2PERIPH_BASE + 0x0400UL)  /* 0x48000400 */
@@ -18,7 +18,15 @@
 /* 2. REGISTER MAP STRUCTURES                                                 */
 /* ========================================================================== */
 
-/* Structure for APB1 map*/
+/* Exercise 12: Explain and apply the 'volatile' qualifier to pointers to prevent the compiler optimizer
+from removing hardware reads 
+
+The use of volatile qualifier avoids the optimization process from completely erasing or ignoring the unexplicitely used variables by the CPU.
+This is mainly used to tell the compiler that even if the processor does not interact directly with these registers, it cannot assume
+that anything from them; it is used, for example, to allow external hardware or signals modify addresses without even if the optimization flags are set
+during compilation, otherwise, the compiler will assume these variables are unused by the processor and will erase them before compilation
+*/
+/* Structure for UART map*/
 typedef struct{
    volatile uint32_t CR1;          /* 0x00 */
    volatile uint32_t CR2;          /* 0x04 */
