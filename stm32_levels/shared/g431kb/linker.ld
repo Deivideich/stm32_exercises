@@ -2,7 +2,9 @@
 MEMORY
 {
     FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = 128K
-    SRAM  (rwx) : ORIGIN = 0x20000000, LENGTH = 32K
+    SRAM      (rwx) : ORIGIN = 0x20000000, LENGTH = 0x4000   /* 16K: 0x20000000-0x20003FFF */
+    STOPWATCH (rw)  : ORIGIN = 0x20004000, LENGTH = 0x10     /* 16 bytes  */
+    SRAM2     (rwx) : ORIGIN = 0x20004010, LENGTH = 0x3FF0   /* The rest: up to 0x20008000 */
 }
 
 /* Output sections mapping */
@@ -54,6 +56,13 @@ SECTIONS
         _edata = .;        /* Define global symbol for end of data section */
     } > SRAM AT > FLASH
 
+    .stopwatch_block (NOLOAD) :
+    {
+        . = ALIGN(4);
+        . = . + 16;
+        . = ALIGN(4);
+    } > STOPWATCH
+
     /* Uninitialized data section cleared to zero at startup */
     .bss :
     {
@@ -66,5 +75,5 @@ SECTIONS
     } > SRAM
 
     /* Initial Stack Pointer address set to the top of SRAM */
-    _estack = ORIGIN(SRAM) + LENGTH(SRAM);
+    _estack = ORIGIN(SRAM2) + LENGTH(SRAM2);  
 }

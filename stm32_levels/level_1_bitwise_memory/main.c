@@ -49,9 +49,27 @@ void bitwise_operations(void) {
     register_sim = (~(sensor_mask << MOCK_SENSOR_BITFIELD_READ_AND_RESET_SHIFT) & register_sim) | (init_config_sensor << MOCK_SENSOR_BITFIELD_READ_AND_RESET_SHIFT);
 }
 
+typedef struct {
+    CUSTOM_SIMULATED_STOPWATCH_MODULE_TypeDef *Instance; // Apunta a STOPWATCH1
+    uint32_t InitialSeconds;
+} STOPWATCH_HandleTypeDef;
+
+void HAL_STOPWATCH_Init(STOPWATCH_HandleTypeDef *hstopwatch) {
+    // Remove RAM residue through explicit initialization
+    hstopwatch->Instance->SECONDS = hstopwatch->InitialSeconds;
+    hstopwatch->Instance->MINUTES = 0;
+    hstopwatch->Instance->HOURS = 0;
+    hstopwatch->Instance->CR = 0; // Turned off
+}
 
 int main(void) {
-
+    STOPWATCH_HandleTypeDef hmy_stopwatch;
+    hmy_stopwatch.Instance = STOPWATCH1;
+    hmy_stopwatch.InitialSeconds = 0;
+    HAL_STOPWATCH_Init(&hmy_stopwatch);
+    // Exercise 14: Implement a shared global variable modified within an ISR (Interrupt Service Routine) properly qualified as 'volatile'.
+    volatile uint32_t simulated_register_for_isr = 0xAFB38F93;
+    (void)simulated_register_for_isr;
     bitwise_operations();
 
     custom_struct_packed_t custom_struct_packed;
