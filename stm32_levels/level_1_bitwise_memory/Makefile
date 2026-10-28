@@ -12,6 +12,9 @@ SIZE    = arm-none-eabi-size
 # Project source files (local main + shared startup)
 SRCS = main.c $(SHARED_DIR)/startup.c
 
+# Dynamically map object files to the build folder
+OBJS = build/main.o build/startup.o
+
 # Compilation options
 CFLAGS  = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -O0 -g3 -Wall -ffunction-sections -fdata-sections -I$(SHARED_DIR)
@@ -22,9 +25,18 @@ LDFLAGS = -T $(SHARED_DIR)/linker.ld -nostartfiles -Wl,--gc-sections -Wl,-Map=bu
 # Default rule: Compile the project
 all: build/$(PROJECT).elf
 
-build/$(PROJECT).elf: $(SRCS)
+# Step 1: Pattern rules to compile source files to object files independently
+build/main.o: main.c
 	@mkdir -p build
-	$(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) -o build/$(PROJECT).elf
+	$(CC) $(CFLAGS) -c main.c -o build/main.o
+
+build/startup.o: $(SHARED_DIR)/startup.c
+	@mkdir -p build
+	$(CC) $(CFLAGS) -c $(SHARED_DIR)/startup.c -o build/startup.o
+
+# Step 2: Link target utilizing separate object files and LDFLAGS cleanly
+build/$(PROJECT).elf: $(OBJS)
+	$(CC) $(LDFLAGS) $(OBJS) -o build/$(PROJECT).elf
 	$(OBJCOPY) -O binary build/$(PROJECT).elf build/$(PROJECT).bin
 	@echo "\n--- Firmware Size ---"
 	$(SIZE) build/$(PROJECT).elf
