@@ -1,6 +1,13 @@
 #include "hardware.h"
 #include "include/packed_struct.h"
 
+typedef struct {
+    CUSTOM_SIMULATED_STOPWATCH_MODULE_TypeDef *Instance; // Apunta a STOPWATCH1
+    uint32_t InitialSeconds;
+} STOPWATCH_HandleTypeDef;
+
+__attribute__((used)) static STOPWATCH_HandleTypeDef hmy_stopwatch;
+
 void delay(volatile uint32_t count) {
     while (count--) {
         __asm("nop");
@@ -48,11 +55,6 @@ void bitwise_operations(void) {
     #define MOCK_SENSOR_BITFIELD_READ_AND_RESET_SHIFT 10U
     register_sim = (~(sensor_mask << MOCK_SENSOR_BITFIELD_READ_AND_RESET_SHIFT) & register_sim) | (init_config_sensor << MOCK_SENSOR_BITFIELD_READ_AND_RESET_SHIFT);
 }
-
-typedef struct {
-    CUSTOM_SIMULATED_STOPWATCH_MODULE_TypeDef *Instance; // Apunta a STOPWATCH1
-    uint32_t InitialSeconds;
-} STOPWATCH_HandleTypeDef;
 
 void HAL_STOPWATCH_Init(STOPWATCH_HandleTypeDef *hstopwatch) {
     // Remove RAM residue through explicit initialization
