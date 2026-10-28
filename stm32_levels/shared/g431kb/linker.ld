@@ -1,4 +1,7 @@
 /* Memory layout configuration for STM32G431KB */
+
+ENTRY(Reset_Handler)
+
 MEMORY
 {
     FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = 128K
@@ -59,6 +62,7 @@ SECTIONS
     .stopwatch_block (NOLOAD) :
     {
         . = ALIGN(4);
+        KEEP(*(.stopwatch_block)) /* <--- KEEP TO AVOID BUGS WITH GC-SECTIONS FLAG */
         . = . + 16;
         . = ALIGN(4);
     } > STOPWATCH
