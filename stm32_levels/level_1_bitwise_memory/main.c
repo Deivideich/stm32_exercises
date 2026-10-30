@@ -66,7 +66,7 @@ void HAL_STOPWATCH_Init(STOPWATCH_HandleTypeDef *hstopwatch) {
 
 int main(void) {
     hmy_stopwatch.Instance = STOPWATCH1;
-    hmy_stopwatch.InitialSeconds = 0;
+    hmy_stopwatch.InitialSeconds = 42;
     HAL_STOPWATCH_Init(&hmy_stopwatch);
     // Exercise 14: Implement a shared global variable modified within an ISR (Interrupt Service Routine) properly qualified as 'volatile'.
     volatile uint32_t simulated_register_for_isr = 0xAFB38F93;
