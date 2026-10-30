@@ -10,6 +10,9 @@ target remote localhost:3333
 # Command to reset the chip program
 monitor reset halt
 
+# 3.1. Load again to avoid debug sessions running old symbols
+load
+
 # 4. Custom macros definitions
 # pbin command is defined to print varibales in binary format
 define pbin

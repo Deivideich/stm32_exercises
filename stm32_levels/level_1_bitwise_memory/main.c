@@ -65,7 +65,6 @@ void HAL_STOPWATCH_Init(STOPWATCH_HandleTypeDef *hstopwatch) {
 }
 
 int main(void) {
-    STOPWATCH_HandleTypeDef hmy_stopwatch;
     hmy_stopwatch.Instance = STOPWATCH1;
     hmy_stopwatch.InitialSeconds = 0;
     HAL_STOPWATCH_Init(&hmy_stopwatch);
